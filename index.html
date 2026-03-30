@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Binance Web Clone – Trade Bitcoin, Ethereum, Solana and 500+ cryptocurrencies with live prices, charts, instant buy/sell, wallet &amp; portfolio. Fully functional sleek crypto exchange demo built with HTML5, CSS3, JavaScript, jQuery &amp; Bootstrap.">
+    <meta name="keywords" content="binance clone, crypto trading, bitcoin, ethereum, solana, cryptocurrency exchange, live prices, trading platform, web app, bootstrap, html5, css3, javascript, jquery, responsive, mobile friendly, portfolio">
+    <meta name="author" content="SAMER SAEID">
+    <meta name="robots" content="index, follow">
+    <title>Binance • Buy Bitcoin &amp; Crypto</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-dark text-light">
+    <!-- TOP NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom border-warning fixed-top">
+        <div class="container-fluid">
+            <!-- Logo -->
+            <a class="navbar-brand d-flex align-items-center fw-bold fs-3" href="#" onclick="return false;">
+                <span class="text-warning">BINANCE</span>
+            </a>
+            
+            <!-- Search -->
+            <form class="d-flex flex-grow-1 mx-3 mx-lg-5" style="max-width: 380px;" onsubmit="fakeSearch(event)">
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-warning text-light"><i class="bi bi-search"></i></span>
+                    <input id="searchInput" type="text" class="form-control bg-dark border-warning text-light shadow-none" placeholder="Search coins or pairs (BTC, ETH...)" aria-label="Search">
+                </div>
+            </form>
+            
+            <!-- Desktop Right Icons -->
+            <div class="d-none d-lg-flex align-items-center gap-4">
+                <div onclick="showNotifications()" class="position-relative cursor-pointer">
+                    <i class="bi bi-bell fs-4"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill">3</span>
+                </div>
+                <div onclick="showP2P()" class="cursor-pointer text-warning"><i class="bi bi-cash-stack fs-4"></i></div>
+                <div onclick="showEarn()" class="cursor-pointer"><i class="bi bi-graph-up-arrow fs-4"></i></div>
+                
+                <!-- Balance quick view -->
+                <div class="d-flex align-items-center border border-warning rounded-3 px-3 py-1">
+                    <small class="text-warning">USDT</small>
+                    <span id="topBalance" class="ms-2 fw-bold fs-5">1,284.76</span>
+                </div>
+                
+                <!-- Profile -->
+                <div class="dropdown">
+                    <a href="#" id="profileDropdown" class="d-flex align-items-center" data-bs-toggle="dropdown">
+                        <img src="https://i.pravatar.cc/32?u=samer" alt="Samer" class="rounded-circle border border-warning" width="32" height="32">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end bg-dark border-warning text-light shadow">
+                        <li><a class="dropdown-item text-light" href="#" onclick="return false;">👤 Profile &amp; Security</a></li>
+                        <li><a class="dropdown-item text-light" href="#" onclick="switchView('wallet')">💼 Wallet</a></li>
+                        <li><a class="dropdown-item text-light" href="#" onclick="return false;">📜 History</a></li>
+                        <li><hr class="dropdown-divider border-warning"></li>
+                        <li><a class="dropdown-item text-danger" href="#" onclick="fakeLogout(event)">🚪 Log Out</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Mobile toggler -->
+            <button class="navbar-toggler border-warning" type="button" data-bs-toggle="collapse" data-bs-target="#mobileTop">
+                <i class="bi bi-list fs-3"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="container-fluid pt-5 mt-5 pb-5">
+        <div class="row g-3">
+            
+            <!-- LEFT SIDEBAR (Desktop) -->
+            <div class="col-lg-2 d-none d-lg-block sticky-top" style="top: 70px;">
+                <div class="card bg-black border-warning h-100">
+                    <div class="card-body">
+                        <h6 class="fw-bold text-warning mb-3"><i class="bi bi-star-fill"></i> Watchlist</h6>
+                        <div id="watchlistContainer" class="small"></div>
+                        
+                        <hr class="border-warning">
+                        <h6 class="fw-bold text-warning mb-3"><i class="bi bi-lightning"></i> Trending</h6>
+                        <div id="trendingContainer" class="small"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CENTER -->
+            <div class="col-lg-7 col-md-12">
+                
+                <!-- BALANCE HERO -->
+                <div class="card bg-black border-warning mb-4 shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">Total Portfolio Value</small>
+                                <h2 id="mainBalance" class="fw-bold text-warning mb-0">$1,284.76</h2>
+                                <small id="balanceChange" class="text-success">+4.82% <i class="bi bi-arrow-up"></i> today</small>
+                            </div>
+                            <div class="text-end">
+                                <button onclick="showDepositModal()" class="btn btn-warning text-dark fw-bold px-4">Deposit</button>
+                                <button onclick="showWithdrawModal()" class="btn btn-outline-warning fw-bold px-4 ms-2">Withdraw</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Mini portfolio pie -->
+                        <div class="mt-4 d-flex justify-content-center">
+                            <div id="portfolioPie" class="position-relative" style="width: 180px; height: 180px;">
+                                <!-- Fake pie created with conic-gradient via JS -->
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-around mt-3 small">
+                            <div><span class="text-warning">BTC</span> 42%</div>
+                            <div><span class="text-info">ETH</span> 31%</div>
+                            <div><span class="text-success">SOL</span> 18%</div>
+                            <div><span class="text-danger">USDT</span> 9%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TABS -->
+                <ul class="nav nav-tabs nav-tabs-dark mb-3 border-warning" id="mainTabs">
+                    <li class="nav-item"><a onclick="switchTab(0)" class="nav-link active text-light" href="#">Markets</a></li>
+                    <li class="nav-item"><a onclick="switchTab(1)" class="nav-link text-light" href="#">Spot Trade</a></li>
+                    <li class="nav-item"><a onclick="switchTab(2)" class="nav-link text-light" href="#">Futures</a></li>
+                    <li class="nav-item"><a onclick="switchTab(3)" class="nav-link text-light" href="#">P2P</a></li>
+                </ul>
+                
+                <!-- MARKETS TABLE -->
+                <div id="marketsView">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle" id="marketsTable">
+                            <thead>
+                                <tr>
+                                    <th>Coin</th>
+                                    <th class="text-end">Price</th>
+                                    <th class="text-end">24h Change</th>
+                                    <th class="text-end">Volume</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="marketsBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- TRADE VIEW (hidden by default) -->
+                <div id="tradeView" class="d-none">
+                    <div class="card bg-black border-warning p-4">
+                        <h5 class="text-warning">Quick Spot Trade • BTC/USDT</h5>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="small text-muted">You pay</label>
+                                <div class="input-group">
+                                    <input id="buyAmount" type="text" class="form-control bg-dark text-light" value="100" placeholder="USDT amount">
+                                    <span class="input-group-text bg-dark text-light">USDT</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="small text-muted">You get</label>
+                                <div id="estimatedBTC" class="fs-4 fw-bold text-warning">0.00148 BTC</div>
+                            </div>
+                        </div>
+                        <button onclick="executeTrade()" class="btn btn-warning w-100 mt-4 text-dark fw-bold py-3">BUY BTC</button>
+                        <div class="text-center mt-3 small text-muted">Fee: 0.1% • Best price guaranteed</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- RIGHT SIDEBAR -->
+            <div class="col-lg-3 d-none d-xl-block sticky-top" style="top: 70px;">
+                <div class="card bg-black border-warning mb-4">
+                    <div class="card-body">
+                        <h6 class="text-warning fw-bold"><i class="bi bi-graph-up"></i> Live Chart Preview</h6>
+                        <canvas id="miniChart" width="300" height="160"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card bg-black border-warning">
+                    <div class="card-body">
+                        <h6 class="text-warning fw-bold mb-3"><i class="bi bi-wallet2"></i> Your Holdings</h6>
+                        <div id="holdingsList" class="small"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MOBILE BOTTOM NAV -->
+    <nav id="mobileBottomNav" class="d-lg-none navbar-dark bg-black border-top border-warning fixed-bottom">
+        <div class="container-fluid d-flex justify-content-around py-2 text-center">
+            <a onclick="switchView('home')" class="text-light"><i class="bi bi-house-door-fill fs-3"></i><br><small>Home</small></a>
+            <a onclick="switchView('markets')" class="text-light"><i class="bi bi-bar-chart-line fs-3"></i><br><small>Markets</small></a>
+            <a onclick="showTradeModal()" class="text-warning"><i class="bi bi-plus-circle-fill fs-1"></i></a>
+            <a onclick="switchView('wallet')" class="text-light"><i class="bi bi-wallet2 fs-3"></i><br><small>Wallet</small></a>
+            <a onclick="showEarn()" class="text-light"><i class="bi bi-gift fs-3"></i><br><small>Earn</small></a>
+        </div>
+    </nav>
+    
+    <!-- TRADE DETAIL MODAL -->
+    <div class="modal fade" id="coinModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-dark border-warning text-light">
+                <div class="modal-header border-warning">
+                    <h5 id="modalCoinTitle" class="modal-title fw-bold"></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <div>
+                            <span id="modalPrice" class="fs-2 fw-bold"></span>
+                            <span id="modalChange" class="ms-3"></span>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted">24h High / Low</small><br>
+                            <span id="modalHighLow"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Canvas Chart -->
+                    <canvas id="modalChart" width="700" height="260" class="w-100"></canvas>
+                    
+                    <div class="mt-4">
+                        <h6 class="text-warning">Place Order</h6>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="btn-group w-100">
+                                    <button onclick="setOrderType('buy')" id="buyBtn" class="btn btn-success active">Buy</button>
+                                    <button onclick="setOrderType('sell')" id="sellBtn" class="btn btn-danger">Sell</button>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <input id="modalOrderAmount" type="text" class="form-control bg-dark text-light" placeholder="Amount in USDT">
+                            </div>
+                        </div>
+                        <button onclick="executeModalTrade()" class="btn btn-warning w-100 mt-3 text-dark fw-bold">CONFIRM TRADE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- DEPOSIT MODAL -->
+    <div class="modal fade" id="depositModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark border-warning">
+                <div class="modal-header">
+                    <h5 class="modal-title text-warning">Deposit Funds</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">Choose payment method (demo)</p>
+                    <div class="d-grid gap-2">
+                        <button onclick="fakeDeposit()" class="btn btn-outline-warning">Bank Transfer</button>
+                        <button onclick="fakeDeposit()" class="btn btn-outline-warning">Credit / Debit Card</button>
+                        <button onclick="fakeDeposit()" class="btn btn-outline-warning">P2P Trading</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FOOTER -->
+    <footer class="bg-black border-top border-warning py-4">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center text-center text-md-start gap-3">
+                <p class="mb-0 text-muted small">© Copyright SAMER SAEID. All rights reserved.</p>
+                <p class="mb-0 text-muted small">Made by ♥️ <a href="https://bio.link/samer" target="_blank" class="text-decoration-none text-warning fw-semibold">SAMER SAEID</a></p>
+                <div class="d-flex gap-3">
+                    <a href="#" onclick="return false;" class="text-muted small">Security • SAFU</a>
+                    <a href="#" onclick="return false;" class="text-muted small">24/7 Support</a>
+                    <a href="#" onclick="return false;" class="text-muted small">API</a>
+                </div>
+                <small class="text-muted">Fully responsive • Live prices simulated • SEO optimized</small>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+</html>
